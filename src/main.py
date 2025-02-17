@@ -55,27 +55,13 @@ def train(ori_adj, break_adj, feats, idx_train, idx_test, layer_num, num_nodes, 
     auc_patience = 0
     best_auc = -float('inf')
     for epoch in range(args.epoches):
-        # import cProfile
-        # import pstats
-        # profiler = cProfile.Profile()
-        # profiler.enable()
-
         model.train()
         epoches_times, epoches_loss, epoches_acc, epoches_auc, epoches_ap, epoches_f1 = [], [], [], [], [], []
-        # for batch_idx, *batch_data in tqdm(enumerate(zip_longest(*train_data_loaders, fillvalue=None)),
-        #                                    desc='processing',unit='items',total=max_len_train):
         for batch_idx, *batch_data in tqdm(enumerate(zip(*[islice(cycle(loader), max_len_train) for loader in train_data_loaders])),
                 desc='processing', unit='items', total=max_len_train):
-            # import cProfile
-            # import pstats
-            # profiler = cProfile.Profile()
-            # profiler.enable()
-
             loss, acc, auc, ap, f1 = [], [], [], [], []
             start_train_time = time.time()
             for train_layer, train_data in enumerate(*batch_data):
-                # if train_data is None:
-                #     continue
                 train_nodes, train_targets = train_data
                 loss_t, acc_t, auc_t, ap_t, f1_t = model(train_nodes.view(-1), train_targets, train_layer)
                 loss.append(loss_t)
@@ -95,11 +81,6 @@ def train(ori_adj, break_adj, feats, idx_train, idx_test, layer_num, num_nodes, 
                 epoches_auc.append(sum(auc) / len(auc))
                 epoches_ap.append(sum(ap) / len(ap))
                 epoches_f1.append(sum(f1) / len(f1))
-
-            # profiler.disable()
-            # stats = pstats.Stats(profiler)
-            # stats.sort_stats('cumulative').print_stats()
-            # sys.exit()
         print("train epoches: {}/{} | ".format(epoch + 1, args.epoches),
               "loss: {:.4f} | ".format(sum(epoches_loss) / len(epoches_loss)),
               "acc: {:.4f} | ".format(sum(epoches_acc) / len(epoches_acc)),
@@ -107,10 +88,6 @@ def train(ori_adj, break_adj, feats, idx_train, idx_test, layer_num, num_nodes, 
               "f1: {:.4f} | ".format(sum(epoches_f1) / len(epoches_f1)),
               "auc: {:.4f} | ".format(sum(epoches_auc) / len(epoches_auc)),
               "time: {:.4f}".format(sum(epoches_times)))
-        # profiler.disable()
-        # stats = pstats.Stats(profiler)
-        # stats.sort_stats('cumulative').print_stats()
-        # sys.exit()
         eval(model, val_data_loaders, max_len_val, eval_type='eval')
         if (epoch + 1) % 5 == 0:
             with torch.no_grad():
@@ -124,7 +101,6 @@ def train(ori_adj, break_adj, feats, idx_train, idx_test, layer_num, num_nodes, 
                     print("Early Stopping")
                     break
         torch.cuda.empty_cache() # 每次计算后清理GPU缓存
-    # patience_auc = test(model, test_data_loaders, max_len_test, eval_data)
     if args.save_checkpoint:
         torch.save(model.state_dict(), f'checkpoint/{args.inter_aggregation}_{args.datasetname}_{times}_model_checkpoint.pth')
         print("Model parameters saved!")
