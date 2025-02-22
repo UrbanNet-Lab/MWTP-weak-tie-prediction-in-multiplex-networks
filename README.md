@@ -23,7 +23,7 @@ We provide the CKM sample dataset.
 
 ### Training
 
-If you want to execute the MWTP-semantic version you can execute `python src/main-re.py --datasetname=ckm --epoches=200 --run_times=10 --save_checkpoint=1 --device=gpu`, if you want to execute the MWTP-logit version you can execute `python src/main-re.py --datasetname=ckm --epoches=200 --run_times=10 --save_checkpoint=1 --device=gpu`.
+If you want to execute the MWTP-semantic version you can execute `python src/main.py --datasetname=ckm --epoches=200 --run_times=10 --save_checkpoint=1 --inter_aggregation=semantic --device=gpu`, if you want to execute the MWTP-logit version you can execute `python src/main.py --datasetname=ckm --epoches=200 --run_times=10 --save_checkpoint=1 --inter_aggregation=logit --device=gpu`.
 
 ### Training on your own datasets
 
