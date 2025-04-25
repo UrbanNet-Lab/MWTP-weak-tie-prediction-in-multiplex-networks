@@ -1,4 +1,5 @@
 # MWTP
+Citation: Weiwei Gu, Linbi Lv, Gang Lu, Ruiqi Li. MWTP: a heterogeneous multiplex representation learning framework for link prediction of weak ties. Neural Networks, In press. 
 
 ## Prerequisites
 
